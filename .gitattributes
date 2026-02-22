@@ -1,0 +1,31 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts should always use LF
+*.sh text eol=lf
+sail text eol=lf
+
+# Batch files should always use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Config files
+*.yml text
+*.yaml text
+*.json text
+*.xml text
+*.ini text
+*.conf text
+
+# PHP/JS/HTML
+*.php text
+*.js text
+*.ts text
+*.html text
+*.css text
+*.scss text
+*.vue text
+
+# Docker
+Dockerfile text
+docker-compose*.yml text
