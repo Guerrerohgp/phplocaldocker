@@ -22,7 +22,7 @@ A generic, configurable Docker development environment for PHP projects. Support
 
 ```bash
 # 1. Clone or copy this project
-git clone <repository-url> my-project
+git clone https://github.com/Guerrerohgp/phplocaldocker.git my-project
 cd my-project
 
 # 2. Create environment file
