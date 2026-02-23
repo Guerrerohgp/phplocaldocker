@@ -340,10 +340,11 @@ docker exec phplocaldocker-app-1 php-fpm${PHP_VERSION} -t
 ```bash
 ./sail down -v  # Remove containers and volumes
 docker system prune -a  # Clean all unused Docker resources
+```
+
 ## File Structure
 
 ```
-.
 ├── .env                    # Environment configuration
 ├── .env.example            # Configuration template
 ├── .gitignore              # Git ignore rules
