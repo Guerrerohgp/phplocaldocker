@@ -59,6 +59,8 @@ display_help() {
     echo "  stop        Stop the containers"
     echo "  restart     Restart the containers"
     echo "  ssl         Generate SSL certificates"
+    echo "  backup      Backup all databases"
+    echo "  restore     Restore databases (./sail restore --help)"
     echo "  help        Show this help message"
 }
 
@@ -75,7 +77,12 @@ case "$1" in
         $DOCKER_COMPOSE down
         ;;
     build)
-        $DOCKER_COMPOSE build --build-arg WWWGROUP="${WWWGROUP:-1000}"
+        $DOCKER_COMPOSE build \
+            --build-arg WWWGROUP="${WWWGROUP:-1000}" \
+            --build-arg PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-100M}" \
+            --build-arg PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-100M}" \
+            --build-arg PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}" \
+            --build-arg PHP_SHORT_OPEN_TAG="${PHP_SHORT_OPEN_TAG:-On}"
         ;;
     ps)
         $DOCKER_COMPOSE ps
@@ -122,6 +129,24 @@ case "$1" in
         ;;
     ssl)
         ./docker/ssl/generate-certs.sh
+        ;;
+    backup)
+        ./docker/scripts/backup.sh
+        ;;
+    restore)
+        shift
+        if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+            echo "Restore databases from backup"
+            echo ""
+            echo "Usage:"
+            echo "  ./sail restore                      List available backups"
+            echo "  ./sail restore <mysql> <postgres>   Restore both databases"
+            echo "  ./sail restore --mysql <file>       Restore MySQL only"
+            echo "  ./sail restore --postgres <file>    Restore PostgreSQL only"
+            echo "  ./sail restore --list               List all backups"
+        else
+            ./docker/scripts/restore.sh "$@"
+        fi
         ;;
     help|--help|-h|"")
         display_help

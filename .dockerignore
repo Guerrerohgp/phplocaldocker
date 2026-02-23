@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment (should not be in build context)
+.env
+.env.*
+.env.old
+
+# SSL certificates (mounted as volume)
+docker/ssl/certs/
+
+# Documentation
+README.md
+LICENSE
+SECURITY.md
+CONTRIBUTING.md
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files not needed in build
+docker-compose.yml
+sail
+sail.bat
+
+# Logs
+*.log

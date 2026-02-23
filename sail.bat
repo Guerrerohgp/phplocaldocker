@@ -54,7 +54,11 @@ if "%1"=="down" (
 )
 if "%1"=="build" (
     if "%WWWGROUP%"=="" set WWWGROUP=1000
-    %DOCKER_COMPOSE% build --build-arg WWWGROUP=%WWWGROUP%
+    if "%PHP_POST_MAX_SIZE%"=="" set PHP_POST_MAX_SIZE=100M
+    if "%PHP_UPLOAD_MAX_FILESIZE%"=="" set PHP_UPLOAD_MAX_FILESIZE=100M
+    if "%PHP_MAX_EXECUTION_TIME%"=="" set PHP_MAX_EXECUTION_TIME=300
+    if "%PHP_SHORT_OPEN_TAG%"=="" set PHP_SHORT_OPEN_TAG=On
+    %DOCKER_COMPOSE% build --build-arg WWWGROUP=%WWWGROUP% --build-arg PHP_POST_MAX_SIZE=%PHP_POST_MAX_SIZE% --build-arg PHP_UPLOAD_MAX_FILESIZE=%PHP_UPLOAD_MAX_FILESIZE% --build-arg PHP_MAX_EXECUTION_TIME=%PHP_MAX_EXECUTION_TIME% --build-arg PHP_SHORT_OPEN_TAG=%PHP_SHORT_OPEN_TAG%
     goto end
 )
 if "%1"=="ps" (
@@ -121,6 +125,15 @@ if "%1"=="ssl" (
     call docker\ssl\generate-certs.bat
     goto end
 )
+if "%1"=="backup" (
+    call docker\scripts\backup.bat
+    goto end
+)
+if "%1"=="restore" (
+    shift
+    call docker\scripts\restore.bat %*
+    goto end
+)
 
 echo Unknown command: %1
 echo Run 'sail help' for available commands.
@@ -149,6 +162,8 @@ echo   mailpit     Show Mailpit logs
 echo   stop        Stop the containers
 echo   restart     Restart the containers
 echo   ssl         Generate SSL certificates
+echo   backup      Backup all databases
+echo   restore     Restore databases
 echo   help        Show this help message
 
 :end

@@ -2,6 +2,8 @@
 
 A generic, configurable Docker development environment for PHP projects. Supports multiple PHP versions, databases (MySQL & PostgreSQL), and works across macOS, Linux, and Windows.
 
+> **WARNING:** This is a development environment only. Do NOT use in production. See [SECURITY.md](SECURITY.md) for details.
+
 ## Features
 
 - **Multiple PHP Versions**: 7.4, 8.0, 8.1, 8.2, 8.3
@@ -60,6 +62,10 @@ Edit the `.env` file to customize your setup:
 |----------|---------|-------------|
 | `PHP_VERSION` | `8.2` | PHP version (7.4, 8.0, 8.1, 8.2, 8.3) |
 | `NODE_VERSION` | `20` | Node.js version |
+| `PHP_POST_MAX_SIZE` | `100M` | Maximum POST data size |
+| `PHP_UPLOAD_MAX_FILESIZE` | `100M` | Maximum upload file size |
+| `PHP_MAX_EXECUTION_TIME` | `300` | Maximum script execution time (seconds) |
+| `PHP_SHORT_OPEN_TAG` | `On` | Enable short open tags (`<?`) |
 
 ### Database Settings
 
@@ -117,6 +123,27 @@ Edit the `.env` file to customize your setup:
 ./sail psql        # Open PostgreSQL CLI
 ./sail redis       # Open Redis CLI
 ```
+
+### Backup & Restore
+
+```bash
+./sail backup                          # Backup all databases
+./sail restore --list                  # List available backups
+./sail restore <mysql> <postgres>      # Restore both databases
+./sail restore --mysql <file>          # Restore MySQL only
+./sail restore --postgres <file>       # Restore PostgreSQL only
+```
+
+**Windows (CMD):**
+```cmd
+sail.bat backup
+sail.bat restore --list
+sail.bat restore myapp_mysql_20240115_120000.sql myapp_postgres_20240115_120000.sql
+```
+
+Backups are stored in the `backups/` directory with timestamps in the format:
+- `myapp_mysql_YYYYMMDD_HHMMSS.sql.gz`
+- `myapp_postgres_YYYYMMDD_HHMMSS.sql`
 
 ### Utilities
 
@@ -313,20 +340,21 @@ docker exec phplocaldocker-app-1 php-fpm${PHP_VERSION} -t
 ```bash
 ./sail down -v  # Remove containers and volumes
 docker system prune -a  # Clean all unused Docker resources
-```
-
 ## File Structure
 
 ```
 .
 ├── .env                    # Environment configuration
 ├── .env.example            # Configuration template
-├── .gitattributes          # Cross-platform line endings
+├── .gitignore              # Git ignore rules
+├── .dockerignore           # Docker build ignore rules
 ├── docker-compose.yml      # Docker services definition
 ├── sail                    # CLI tool (macOS/Linux)
 ├── sail.bat                # CLI tool (Windows)
+├── SECURITY.md             # Security guidelines
 ├── public/                 # Web root
 │   └── index.php
+├── backups/                # Database backups (auto-created)
 └── docker/
     ├── mysql/
     │   └── create-testing-database.sh
@@ -340,11 +368,17 @@ docker system prune -a  # Clean all unused Docker resources
     │   └── start-container
     ├── postgres/
     │   └── create-testing-database.sh
+    ├── scripts/
+    │   ├── backup.sh       # Database backup (macOS/Linux)
+    │   ├── backup.bat      # Database backup (Windows)
+    │   ├── restore.sh      # Database restore (macOS/Linux)
+    │   └── restore.bat     # Database restore (Windows)
     └── ssl/
         ├── nginx.conf
         ├── generate-certs.sh
         ├── generate-certs.bat
         └── certs/
+            └── .gitkeep
 ```
 
 ## License
