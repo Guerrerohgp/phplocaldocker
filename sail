@@ -77,7 +77,12 @@ case "$1" in
         $DOCKER_COMPOSE down
         ;;
     build)
-        $DOCKER_COMPOSE build --build-arg WWWGROUP="${WWWGROUP:-1000}"
+        $DOCKER_COMPOSE build \
+            --build-arg WWWGROUP="${WWWGROUP:-1000}" \
+            --build-arg PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-100M}" \
+            --build-arg PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-100M}" \
+            --build-arg PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}" \
+            --build-arg PHP_SHORT_OPEN_TAG="${PHP_SHORT_OPEN_TAG:-On}"
         ;;
     ps)
         $DOCKER_COMPOSE ps

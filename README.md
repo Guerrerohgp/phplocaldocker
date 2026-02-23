@@ -62,6 +62,10 @@ Edit the `.env` file to customize your setup:
 |----------|---------|-------------|
 | `PHP_VERSION` | `8.2` | PHP version (7.4, 8.0, 8.1, 8.2, 8.3) |
 | `NODE_VERSION` | `20` | Node.js version |
+| `PHP_POST_MAX_SIZE` | `100M` | Maximum POST data size |
+| `PHP_UPLOAD_MAX_FILESIZE` | `100M` | Maximum upload file size |
+| `PHP_MAX_EXECUTION_TIME` | `300` | Maximum script execution time (seconds) |
+| `PHP_SHORT_OPEN_TAG` | `On` | Enable short open tags (`<?`) |
 
 ### Database Settings
 

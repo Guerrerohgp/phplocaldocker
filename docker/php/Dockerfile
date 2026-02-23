@@ -7,6 +7,11 @@ ARG WWWGROUP
 ARG NODE_VERSION=20
 ARG PHP_VERSION
 
+ARG PHP_POST_MAX_SIZE=100M
+ARG PHP_UPLOAD_MAX_FILESIZE=100M
+ARG PHP_MAX_EXECUTION_TIME=300
+ARG PHP_SHORT_OPEN_TAG=On
+
 WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -55,6 +60,14 @@ COPY nginx-default /etc/nginx/sites-available/default
 
 RUN sed -i "s/\${PHP_VERSION}/${PHP_VERSION}/g" /etc/supervisor/supervisord.conf
 RUN sed -i "s/\${PHP_VERSION}/${PHP_VERSION}/g" /etc/nginx/sites-available/default
+RUN sed -i "s/\${PHP_POST_MAX_SIZE}/${PHP_POST_MAX_SIZE}/g" /etc/php/${PHP_VERSION}/cli/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_UPLOAD_MAX_FILESIZE}/${PHP_UPLOAD_MAX_FILESIZE}/g" /etc/php/${PHP_VERSION}/cli/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_MAX_EXECUTION_TIME}/${PHP_MAX_EXECUTION_TIME}/g" /etc/php/${PHP_VERSION}/cli/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_SHORT_OPEN_TAG}/${PHP_SHORT_OPEN_TAG}/g" /etc/php/${PHP_VERSION}/cli/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_POST_MAX_SIZE}/${PHP_POST_MAX_SIZE}/g" /etc/php/${PHP_VERSION}/fpm/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_UPLOAD_MAX_FILESIZE}/${PHP_UPLOAD_MAX_FILESIZE}/g" /etc/php/${PHP_VERSION}/fpm/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_MAX_EXECUTION_TIME}/${PHP_MAX_EXECUTION_TIME}/g" /etc/php/${PHP_VERSION}/fpm/conf.d/99-sail.ini
+RUN sed -i "s/\${PHP_SHORT_OPEN_TAG}/${PHP_SHORT_OPEN_TAG}/g" /etc/php/${PHP_VERSION}/fpm/conf.d/99-sail.ini
 
 RUN chmod +x /usr/local/bin/start-container
 
