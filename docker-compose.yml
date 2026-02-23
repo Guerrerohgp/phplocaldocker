@@ -32,6 +32,11 @@ services:
             - mysql
             - postgres
             - redis
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost"]
+            retries: 3
+            timeout: 5s
+            interval: 30s
     mysql:
         image: 'mysql:${MYSQL_VERSION:-8.0}'
         ports:
@@ -47,7 +52,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-secret}"]
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root}"]
             retries: 3
             timeout: 5s
     postgres:

@@ -1,0 +1,48 @@
+# Environment files - CRITICAL: Never commit these
+.env
+.env.*
+!.env.example
+
+# SSL certificates - generated locally
+docker/ssl/certs/*.crt
+docker/ssl/certs/*.key
+docker/ssl/certs/*.pem
+!docker/ssl/certs/.gitkeep
+
+# Database backups
+backups/
+*.sql
+*.sql.gz
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Dependencies (if any project files added)
+node_modules/
+vendor/
+
+# Docker volumes backup
+*.tar
+*.tar.gz

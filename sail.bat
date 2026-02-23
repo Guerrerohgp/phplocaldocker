@@ -121,6 +121,15 @@ if "%1"=="ssl" (
     call docker\ssl\generate-certs.bat
     goto end
 )
+if "%1"=="backup" (
+    call docker\scripts\backup.bat
+    goto end
+)
+if "%1"=="restore" (
+    shift
+    call docker\scripts\restore.bat %*
+    goto end
+)
 
 echo Unknown command: %1
 echo Run 'sail help' for available commands.
@@ -149,6 +158,8 @@ echo   mailpit     Show Mailpit logs
 echo   stop        Stop the containers
 echo   restart     Restart the containers
 echo   ssl         Generate SSL certificates
+echo   backup      Backup all databases
+echo   restore     Restore databases
 echo   help        Show this help message
 
 :end
