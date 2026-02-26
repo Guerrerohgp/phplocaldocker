@@ -10,10 +10,8 @@ if exist "%SCRIPT_DIR%..\..\.env" (
         if "!line:~0,1!" neq "#" (
             set "value=%%b"
             if defined value (
-                if "!value:~0,1!"=="^"" set "value=!value:~1!"
-                if "!value:~-1!"=="^"" set "value=!value:~0,-1!"
-                if "!value:~0,1!"=="'" set "value=!value:~1!"
-                if "!value:~-1!"=="'" set "value=!value:~0,-1!"
+                set "value=!value:"=!"
+                set "value=!value:'=!"
                 set "%%a=!value!"
             )
         )
