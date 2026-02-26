@@ -17,13 +17,8 @@ if exist "%PROJECT_ROOT%.env" (
         if "!line:~0,1!" neq "#" (
             set "value=%%b"
             if defined value (
-                for /f "tokens=* delims=" %%c in ("!value!") do (
-                    set "value=%%c"
-                )
-                if "!value:~0,1!"=="^"" set "value=!value:~1!"
-                if "!value:~-1!"=="^"" set "value=!value:~0,-1!"
-                if "!value:~0,1!"=="'" set "value=!value:~1!"
-                if "!value:~-1!"=="'" set "value=!value:~0,-1!"
+                set "value=!value:"=!"
+                set "value=!value:'=!"
                 set "%%a=!value!"
             )
         )
