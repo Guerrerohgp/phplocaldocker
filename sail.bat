@@ -6,7 +6,7 @@ set DOCKER_COMPOSE=docker-compose
 where docker-compose >nul 2>nul
 if %errorlevel% neq 0 (
     docker compose version >nul 2>nul
-    if %errorlevel% equ 0 (
+    if !errorlevel! equ 0 (
         set DOCKER_COMPOSE=docker compose
     ) else (
         echo docker-compose is not installed.
@@ -28,10 +28,8 @@ if exist .env (
                 for /f "tokens=* delims=" %%c in ("!value!") do (
                     set "value=%%c"
                 )
-                if "!value:~0,1!"=="^"" set "value=!value:~1!"
-                if "!value:~-1!"=="^"" set "value=!value:~0,-1!"
-                if "!value:~0,1!"=="'" set "value=!value:~1!"
-                if "!value:~-1!"=="'" set "value=!value:~0,-1!"
+                set "value=!value:"=!"
+                set "value=!value:'=!"
                 set "%%a=!value!"
             )
         )
