@@ -67,6 +67,11 @@ load_env
 PROJECT_NAME="${PROJECT_NAME:-myapp}"
 PROJECT_DOMAIN="${PROJECT_DOMAIN:-myapp.test}"
 
+EXEC_FLAGS=""
+if [ ! -t 0 ]; then
+    EXEC_FLAGS="-T"
+fi
+
 if [ $# -gt 0 ]; then
     case "$1" in
         "up")
@@ -94,28 +99,31 @@ if [ $# -gt 0 ]; then
             ;;
         "wp")
             shift
-            $DOCKER_COMPOSE exec app wp "$@"
+            $DOCKER_COMPOSE exec $EXEC_FLAGS app wp "$@"
             ;;
         "composer")
             shift
-            $DOCKER_COMPOSE exec app composer "$@"
+            $DOCKER_COMPOSE exec $EXEC_FLAGS app composer "$@"
             ;;
         "artisan")
             shift
-            $DOCKER_COMPOSE exec app php artisan "$@"
+            $DOCKER_COMPOSE exec $EXEC_FLAGS app php artisan "$@"
             ;;
         "php")
             shift
-            $DOCKER_COMPOSE exec app php "$@"
+            $DOCKER_COMPOSE exec $EXEC_FLAGS app php "$@"
             ;;
         "mysql")
-            $DOCKER_COMPOSE exec mysql mysql -u"${DB_USERNAME}" -p"${DB_PASSWORD}" "${DB_DATABASE}"
+            shift
+            $DOCKER_COMPOSE exec $EXEC_FLAGS mysql mysql -u"${DB_USERNAME}" -p"${DB_PASSWORD}" "${DB_DATABASE}" "$@"
             ;;
         "psql")
-            $DOCKER_COMPOSE exec postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"
+            shift
+            $DOCKER_COMPOSE exec $EXEC_FLAGS postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" "$@"
             ;;
         "redis")
-            $DOCKER_COMPOSE exec redis redis-cli
+            shift
+            $DOCKER_COMPOSE exec $EXEC_FLAGS redis redis-cli "$@"
             ;;
         "mailpit")
             $DOCKER_COMPOSE logs -f mailpit

@@ -50,12 +50,12 @@ docker compose exec \
     mysql mysqldump \
     --user="$DB_USERNAME" \
     --password="$DB_PASSWORD" \
+    --no-tablespaces \
     --single-transaction \
     --routines \
     --triggers \
     --add-drop-database \
     --databases "$DB_DATABASE" \
-    --connect-timeout=28800 \
     > "$MYSQL_BACKUP" 2>/dev/null
 
 gzip "$MYSQL_BACKUP"

@@ -305,6 +305,36 @@ sudo usermod -aG docker $USER
 
 ## Troubleshooting
 
+### Docker Compose Fallback
+
+If the `sail` script fails due to environment issues (like line ending conflicts or missing shell permissions), you can always use native Docker Compose commands:
+
+| Sail Command | Docker Compose Equivalent |
+|--------------|---------------------------|
+| `./sail up` | `docker compose up -d` |
+| `./sail down` | `docker compose down` |
+| `./sail build` | `docker compose build --build-arg WWWGROUP=$(id -g) --build-arg PHP_POST_MAX_SIZE=100M --build-arg PHP_UPLOAD_MAX_FILESIZE=100M --build-arg PHP_MAX_EXECUTION_TIME=300 --build-arg PHP_SHORT_OPEN_TAG=On` |
+| `./sail ps` | `docker compose ps` |
+| `./sail logs` | `docker compose logs -f` |
+| `./sail shell` | `docker compose exec app bash` |
+| `./sail php ...` | `docker compose exec app php ...` |
+| `./sail composer ...` | `docker compose exec app composer ...` |
+| `./sail artisan ...` | `docker compose exec app php artisan ...` |
+| `./sail wp ...` | `docker compose exec app wp ...` |
+
+### Script Permissions & Line Endings
+
+If you encounter `Permission denied` or `Command not found` when running `./sail`:
+
+```bash
+# Fix execution permissions
+chmod +x sail docker/scripts/*.sh docker/ssl/*.sh docker/php/start-container
+
+# If scripts have Windows (CRLF) line endings on Linux/macOS
+# You can fix them using the 'tr' command:
+tr -d '\r' < sail > sail.tmp && mv sail.tmp sail && chmod +x sail
+```
+
 ### Port Already in Use
 
 If port 80 is already in use:
