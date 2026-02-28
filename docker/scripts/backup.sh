@@ -8,15 +8,14 @@ BACKUP_DIR="$PROJECT_ROOT/backups"
 
 load_env() {
     if [ -f "$PROJECT_ROOT/.env" ]; then
-        while IFS='=' read -r key value; do
+        # Export each line in .env, ignoring comments and handling quotes and carriage returns
+        while IFS='=' read -r key value || [[ -n "$key" ]]; do
             if [[ -n "$key" && ! "$key" =~ ^# ]]; then
-                value="${value%\"}"
-                value="${value#\"}"
-                value="${value%\'}"
-                value="${value#\'}"
+                # Remove possible carriage returns and quotes
+                value=$(echo "$value" | tr -d '\r' | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
                 export "$key=$value"
             fi
-        done < <(grep -v '^#' "$PROJECT_ROOT/.env")
+        done < "$PROJECT_ROOT/.env"
     fi
 }
 
@@ -51,12 +50,12 @@ docker compose exec \
     mysql mysqldump \
     --user="$DB_USERNAME" \
     --password="$DB_PASSWORD" \
+    --no-tablespaces \
     --single-transaction \
     --routines \
     --triggers \
     --add-drop-database \
     --databases "$DB_DATABASE" \
-    --connect-timeout=28800 \
     > "$MYSQL_BACKUP" 2>/dev/null
 
 gzip "$MYSQL_BACKUP"

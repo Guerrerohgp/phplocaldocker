@@ -6,15 +6,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CERTS_DIR="$SCRIPT_DIR/certs"
 
 if [ -f "$SCRIPT_DIR/../../.env" ]; then
-    while IFS='=' read -r key value; do
+    # Export each line in .env, ignoring comments and handling quotes and carriage returns
+    while IFS='=' read -r key value || [[ -n "$key" ]]; do
         if [[ -n "$key" && ! "$key" =~ ^# ]]; then
-            value="${value%\"}"
-            value="${value#\"}"
-            value="${value%\'}"
-            value="${value#\'}"
+            # Remove possible carriage returns and quotes
+            value=$(echo "$value" | tr -d '\r' | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
             export "$key=$value"
         fi
-    done < <(grep -v '^#' "$SCRIPT_DIR/../../.env")
+    done < "$SCRIPT_DIR/../../.env"
 fi
 
 PROJECT_DOMAIN="${PROJECT_DOMAIN:-myapp.test}"

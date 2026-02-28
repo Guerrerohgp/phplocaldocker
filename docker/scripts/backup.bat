@@ -48,7 +48,7 @@ set MYSQL_BACKUP=%BACKUP_DIR%%PROJECT_NAME%_mysql_%TIMESTAMP%.sql
 set POSTGRES_BACKUP=%BACKUP_DIR%%PROJECT_NAME%_postgres_%TIMESTAMP%.sql
 
 echo Backing up MySQL database: %DB_DATABASE%
-docker compose exec -T -e COMPOSE_HTTP_TIMEOUT=86400 mysql mysqldump --user=%DB_USERNAME% --password=%DB_PASSWORD% --single-transaction --routines --triggers --add-drop-database --databases %DB_DATABASE% --connect-timeout=28800 > "%MYSQL_BACKUP%" 2>nul
+docker compose exec -T -e COMPOSE_HTTP_TIMEOUT=86400 mysql mysqldump --user=%DB_USERNAME% --password=%DB_PASSWORD% --no-tablespaces --single-transaction --routines --triggers --add-drop-database --databases %DB_DATABASE% > "%MYSQL_BACKUP%" 2>nul
 if %errorlevel% equ 0 (
     echo MySQL backup saved: %MYSQL_BACKUP%
 ) else (
